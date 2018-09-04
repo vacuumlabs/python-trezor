@@ -38,6 +38,6 @@ class TestMsgCardanoSignMessage(TrezorTest):
             passphrase_protection=False,
             label='test',
             language='english')
-        
+
         signature = sign_message(self.client, parse_path(path), message)
         assert expected_signature == hexlify(signature.signature).decode('utf8')

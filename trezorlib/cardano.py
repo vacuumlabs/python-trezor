@@ -30,6 +30,7 @@ from .client import session
 REQUIRED_FIELDS_TRANSACTION = ('inputs', 'outputs', 'transactions')
 REQUIRED_FIELDS_INPUT = ('path', 'prev_hash', 'prev_index', 'type')
 
+
 @field('address')
 @expect(messages.CardanoAddress)
 def get_address(client, address_n, show_display=False):
