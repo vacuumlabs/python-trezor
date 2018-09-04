@@ -26,21 +26,15 @@ from trezorlib.tools import parse_path
 @pytest.mark.skip_t1  # T1 support is not planned
 class TestMsgCardanoGetPublicKey(TrezorTest):
     @pytest.mark.parametrize("path,public_key,chain_code", [
-        ("m/44'/1815'/0'", "dcb047bcede0f61f2f1966f79bfaf20afe8c987c259cfa9e8e17be4fdc6eb6c4", "cadec3c434d90493717a12bc505c793d52473db8005eae6cf7e9275d746d339b"),
-        ("m/44'/1815'/1'", "3b1bf9b06b77f485c35cf541427872e07b2a7091e9d3685e8664dea728f4cab4", "a8f5dcbbcdb56f007847bbacb6df5837e84e3ce9c1a927b31e8baa31560cd195"),
-        ("m/44'/1815'/2'", "cb338f45b7fdda44c29a407e256360ece5e915f41b7f9eda564d1168d2e0bff0", "a7e41f0163e7b12632cef40fdeff73db75230a0a25122fcc83dc56a8109e611a"),
-        ("m/44'/1815'/3'", "647912d68833b361be03f8e715c4234638161de715f2072208dc94675c4742e7", "4b9217f481318cbc15eea77c48d9bca707d8c953538b8d6081503a3481c67f3b"),
+        ("m/44'/1815'/0'", "619ca242c1c4037c562d42208e118a94aeb7b895a82e4d0a3656b93b432b2a18", "7ad6955a9a351d3a018782d579d3c42d87f173fe59bbb149ce235cb8b294b58c"),
+        ("m/44'/1815'/1'", "be9c6cde709851b498edac5de832ffa57f9350f46c15befce53c656aa3d1e5c8", "93ec0b00fd667745311b54fdc4d7ebc8c85935bb968632bd89a4bb74520b11b8"),
+        ("m/44'/1815'/2'", "036bd9920233613e414df360fc296e6bfac630207a1ec1e1f5a0fc15263b132b", "6beeed4c774e5683bd67645307f5e81a6d17a2e6c39e5852f1d581dfd67f37e5"),
+        ("m/44'/1815'/3'", "5b60d6c9b1809ca551dd469253e9ce99f072731aa996849eaf558310e62e0ed1", "6d9bbe6c48f006429266268f4e2cc9c350a2f42bcb8b86c2c4d7053e17394025"),
     ])
     def test_cardano_v1_get_public_key(self, path, public_key, chain_code):
-        # https://github.com/trezor/trezor-core/blob/master/tests/test_apps.cardano.get_public_key.py
-        self.client.load_device_by_mnemonic(
-            mnemonic='plastic that delay conduct police ticket swim gospel intact harsh obtain entire',
-            pin='',
-            passphrase_protection=False,
-            label='test',
-            language='english')
+        self.setup_mnemonic_allallall()
 
-        root_hd_passphrase = '8ee689a22e1ec569d2ada515c4ee712ad089901b7fe0afb94fe196de944ee814'
+        root_hd_passphrase = '977dfbe0e80f01e2d8b160100dd6327ec8bddbcb36efc5fb0c32a710b0e69fcb'
 
         key = get_public_key(self.client, parse_path(path))
 
