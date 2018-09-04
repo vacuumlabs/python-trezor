@@ -21,29 +21,31 @@ from trezorlib.cardano import get_address
 from trezorlib.tools import parse_path
 
 from .common import TrezorTest
+from .conftest import TREZOR_VERSION
 
 
 @pytest.mark.cardano
 @pytest.mark.skip_t1  # T1 support is not planned
+@pytest.mark.xfail(TREZOR_VERSION == 2, reason="T2 support is not yet finished")
 class TestMsgCardanoGetAddress(TrezorTest):
     @pytest.mark.parametrize(
         "path,expected_address",
         [
             (
                 "m/44'/1815'/0'/0/0",
-                "2w1sdSJu3GVfqnGAyqAdaWrN8Txv1vCZTN1Pe2AA54ysjWNbNzma3WVtSJfMc6HpM9KEQsdJ7oALPwfQWesRp8QDsFRQpzuNrdq",
+                "Ae2tdPwUPEZLCq3sFv4wVYxwqjMH2nUzBVt1HFr4v87snYrtYq3d3bq2PUQ",
             ),
             (
                 "m/44'/1815'/0'/0/1",
-                "2w1sdSJu3GVhMmEYeGYEPWahV1V17pFw59GfgqjSRqa6x1rKFxbyCZrQWLe78xdSx3zyed6DrrN5yMgoY7ST2vJeaMzUDB7W3WG",
+                "Ae2tdPwUPEZEY6pVJoyuNNdLp7VbMB7U7qfebeJ7XGunk5Z2eHarkcN1bHK",
             ),
             (
                 "m/44'/1815'/0'/0/2",
-                "2w1sdSJu3GVeHCDfy3mjq8RkzkN3Vh7Di3cB8NRzkwkLQ2FAjxX1kvkNdP9hNBzyBVEJdeWwyb5GfFYXgKe7rPgvWj2QD8FE4W3",
+                "Ae2tdPwUPEZ3gZD1QeUHvAqadAV59Zid6NP9VCR9BG5LLAja9YtBUgr6ttK",
             ),
         ],
     )
-    def test_cardano_get_address_v1(self, path, expected_address):
+    def test_cardano_get_address(self, path, expected_address):
         # data from https://iancoleman.io/bip39/#english
         self.setup_mnemonic_nopin_nopassphrase()
 

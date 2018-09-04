@@ -19,10 +19,12 @@ import pytest
 from trezorlib.cardano import verify_message
 
 from .common import TrezorTest
+from .conftest import TREZOR_VERSION
 
 
 @pytest.mark.cardano
 @pytest.mark.skip_t1  # T1 support is not planned
+@pytest.mark.xfail(TREZOR_VERSION == 2, reason="T2 support is not yet finished")
 class TestMsgCardanoVerifyMessage(TrezorTest):
     # https://github.com/trezor/trezor-core/blob/master/tests/test_apps.cardano.verify_message.py
     @pytest.mark.parametrize(

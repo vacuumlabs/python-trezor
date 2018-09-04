@@ -22,10 +22,12 @@ from trezorlib.cardano import sign_message
 from trezorlib.tools import parse_path
 
 from .common import TrezorTest
+from .conftest import TREZOR_VERSION
 
 
 @pytest.mark.cardano
 @pytest.mark.skip_t1  # T1 support is not planned
+@pytest.mark.xfail(TREZOR_VERSION == 2, reason="T2 support is not yet finished")
 class TestMsgCardanoSignMessage(TrezorTest):
     @pytest.mark.parametrize(
         "message,path,expected_signature",
@@ -33,22 +35,22 @@ class TestMsgCardanoSignMessage(TrezorTest):
             (
                 "Test message to sign",
                 "m/44'/1815'/0'/0/0",
-                "71b788005262ad1ba99e8a9e723066780c3b02da360e7ceb7e656a4e115cc090ab4def812fdf1090f5db246c3922cd4869bfda181e377b957bc738b57d481f0e",
+                "dfb89d2b22c20ac7270e7640f9b27fee030c30d72afc342f83f6cb79a2522e17142597dbfb979462fc9fbf6ea17b4eba3b7cbf582e41b6ac31cb491e7cd1e308",
             ),
             (
                 "New Test message to sign",
                 "m/44'/1815'/0'/0/1",
-                "4770ead4d4b5f3a160c77bf3794b19bf4cf154955ea0162ef37967665286ceeb292dec1225d545d979deeaab9b7437e7bc9045eb627083a0dbd389f1d59df500",
+                "d2c68818859f94138ad28a59aa3419a96394008bd38657fe5e74b299df33e70ff7de1b2091ba4a4351153ce4b6beb7eb7316d917ed9303b9f7de57f76e4e1307",
             ),
             (
                 "Another Test message to sign",
                 "m/44'/1815'/0'/0/2",
-                "1f858f9f5fff1deed9cf7ac8d40511d09080395c90e881a164dd0a862fd5367b8ffd915a01ae45cfceac0c96272d6a3b66f5dc54af3d0666a034f8b5aadaaf08",
+                "cfb1a8f76e566d387ed727e3eefbb3a0d280917045f2fc82ff381f296a17344d520c00882bc0656bf04c9e95f8138540d4b6d10ddf34d80e27704d1b0cbd0f05",
             ),
             (
                 "Just another Test message to sign",
                 "m/44'/1815'/0'/0/3",
-                "2b7fde2b4665f72d40693e2f337ce7452bd5b6afe8c88417f9705d6f28ffbc9cf3b2e5e255946d307fc9654aae33667651923048b812d8070a9d53d620e36703",
+                "a1aadbea98fc4075affb0e0b166b71934ac19420688b80e2ac2cfe3cf0d66404da19a0ab4a9f23335c080dc4cc76d1fd4fdfbb44289a50707d3fcf122a96060d",
             ),
         ],
     )
