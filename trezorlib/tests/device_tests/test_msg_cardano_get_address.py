@@ -34,5 +34,5 @@ class TestMsgCardanoGetAddress(TrezorTest):
         # data from https://iancoleman.io/bip39/#english
         self.setup_mnemonic_nopin_nopassphrase()
 
-        address = get_address(self.client, parse_path(path)).address
+        address = get_address(self.client, parse_path(path))
         assert address == expected_address
