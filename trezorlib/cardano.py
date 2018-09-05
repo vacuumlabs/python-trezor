@@ -14,45 +14,32 @@
 # You should have received a copy of the License along with this library.
 # If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.
 
-import base64
-import struct
 import binascii
 from typing import List
 
-from . import messages
-from . import tools
-from .client import CallException
-from .client import field
-from .client import expect
-from .client import session
+from . import messages, tools
+from .tools import CallException, expect, session
+
+REQUIRED_FIELDS_TRANSACTION = ("inputs", "outputs", "transactions")
+REQUIRED_FIELDS_INPUT = ("path", "prev_hash", "prev_index", "type")
 
 
-REQUIRED_FIELDS_TRANSACTION = ('inputs', 'outputs', 'transactions')
-REQUIRED_FIELDS_INPUT = ('path', 'prev_hash', 'prev_index', 'type')
-
-
-@field('address')
-@expect(messages.CardanoAddress)
+@expect(messages.CardanoAddress, field="address")
 def get_address(client, address_n, show_display=False):
     return client.call(
-        messages.CardanoGetAddress(
-            address_n=address_n, show_display=show_display))
+        messages.CardanoGetAddress(address_n=address_n, show_display=show_display)
+    )
 
 
 @expect(messages.CardanoPublicKey)
 def get_public_key(client, address_n):
-    return client.call(
-        messages.CardanoGetPublicKey(address_n=address_n)
-    )
+    return client.call(messages.CardanoGetPublicKey(address_n=address_n))
 
 
 @expect(messages.CardanoMessageSignature)
 def sign_message(client, address_n, message):
     return client.call(
-        messages.CardanoSignMessage(
-            address_n=address_n,
-            message=message.encode()
-        )
+        messages.CardanoSignMessage(address_n=address_n, message=message.encode())
     )
 
 
@@ -62,7 +49,7 @@ def verify_message(client, public_key, signature, message):
             messages.CardanoVerifyMessage(
                 public_key=binascii.unhexlify(public_key),
                 signature=binascii.unhexlify(signature),
-                message=message.encode()
+                message=message.encode(),
             )
         )
 
@@ -76,12 +63,17 @@ def verify_message(client, public_key, signature, message):
 
 
 @session
-def sign_tx(client, inputs: List[messages.CardanoTxInputType], outputs: List[messages.CardanoTxOutputType], transactions: List[bytes]):
-    response = client.call(messages.CardanoSignTx(
-        inputs=inputs,
-        outputs=outputs,
-        transactions_count=len(transactions),
-    ))
+def sign_tx(
+    client,
+    inputs: List[messages.CardanoTxInputType],
+    outputs: List[messages.CardanoTxOutputType],
+    transactions: List[bytes],
+):
+    response = client.call(
+        messages.CardanoSignTx(
+            inputs=inputs, outputs=outputs, transactions_count=len(transactions)
+        )
+    )
 
     while isinstance(response, messages.CardanoTxRequest):
         tx_index = response.tx_index
@@ -95,31 +87,29 @@ def sign_tx(client, inputs: List[messages.CardanoTxInputType], outputs: List[mes
 
 def create_input(input) -> messages.CardanoTxInputType:
     if not all(input.get(k) is not None for k in REQUIRED_FIELDS_INPUT):
-        raise ValueError('The input is missing some fields')
+        raise ValueError("The input is missing some fields")
 
-    path = input['path']
+    path = input["path"]
 
     return messages.CardanoTxInputType(
         address_n=tools.parse_path(path),
-        prev_hash=binascii.unhexlify(input['prev_hash']),
-        prev_index=input['prev_index'],
-        type=input['type']
+        prev_hash=binascii.unhexlify(input["prev_hash"]),
+        prev_index=input["prev_index"],
+        type=input["type"],
     )
 
 
 def create_output(output) -> messages.CardanoTxOutputType:
-    if not output.get('amount') or not(output.get('address') or output.get('path')):
-        raise ValueError('The output is missing some fields')
+    if not output.get("amount") or not (output.get("address") or output.get("path")):
+        raise ValueError("The output is missing some fields")
 
-    if output.get('path'):
-        path = output['path']
+    if output.get("path"):
+        path = output["path"]
 
         return messages.CardanoTxOutputType(
-            address_n=tools.parse_path(path),
-            amount=int(output['amount'])
+            address_n=tools.parse_path(path), amount=int(output["amount"])
         )
 
     return messages.CardanoTxOutputType(
-        address=output['address'],
-        amount=int(output['amount'])
+        address=output["address"], amount=int(output["amount"])
     )

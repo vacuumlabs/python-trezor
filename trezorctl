@@ -1083,29 +1083,38 @@ def ethereum_sign_tx(
 # ADA functions
 #
 
-@cli.command(help='Sign Cardano transaction.')
-@click.option('-f', '--file', type=click.File('r'), required=True, help='Transaction in JSON format')
+
+@cli.command(help="Sign Cardano transaction.")
+@click.option(
+    "-f",
+    "--file",
+    type=click.File("r"),
+    required=True,
+    help="Transaction in JSON format",
+)
 @click.pass_obj
 def cardano_sign_tx(connect, file):
     client = connect()
 
     transaction = json.load(file)
 
-    inputs = [cardano.create_input(input) for input in transaction['inputs']]
-    outputs = [cardano.create_output(output) for output in transaction['outputs']]
-    transactions = transaction['transactions']
+    inputs = [cardano.create_input(input) for input in transaction["inputs"]]
+    outputs = [cardano.create_output(output) for output in transaction["outputs"]]
+    transactions = transaction["transactions"]
 
     signed_transaction = cardano.sign_tx(client, inputs, outputs, transactions)
 
     return {
-        'tx_hash': binascii.hexlify(signed_transaction.tx_hash).decode(),
-        'tx_body': binascii.hexlify(signed_transaction.tx_body).decode()
+        "tx_hash": binascii.hexlify(signed_transaction.tx_hash).decode(),
+        "tx_body": binascii.hexlify(signed_transaction.tx_body).decode(),
     }
 
 
-@cli.command(help='Get Cardano address.')
-@click.option('-n', '--address', required=True, help="BIP-32 path to key, e.g. m/44'/1815'/0'/0/0")
-@click.option('-d', '--show-display', is_flag=True)
+@cli.command(help="Get Cardano address.")
+@click.option(
+    "-n", "--address", required=True, help="BIP-32 path to key, e.g. m/44'/1815'/0'/0/0"
+)
+@click.option("-d", "--show-display", is_flag=True)
 @click.pass_obj
 def cardano_get_address(connect, address, show_display):
     client = connect()
@@ -1114,8 +1123,10 @@ def cardano_get_address(connect, address, show_display):
     return cardano.get_address(client, address_n, show_display)
 
 
-@cli.command(help='Get Cardano public key.')
-@click.option('-n', '--address', required=True, help="BIP-32 path to key, e.g. m/44'/1815'/0'/0/0")
+@cli.command(help="Get Cardano public key.")
+@click.option(
+    "-n", "--address", required=True, help="BIP-32 path to key, e.g. m/44'/1815'/0'/0/0"
+)
 @click.pass_obj
 def cardano_get_public_key(connect, address):
     client = connect()
@@ -1124,9 +1135,11 @@ def cardano_get_public_key(connect, address):
     return cardano.get_public_key(client, address_n)
 
 
-@cli.command(help='Sign Cardano message.')
-@click.option('-n', '--address', required=True, help="BIP-32 path to key, e.g. m/44'/1815'/0'/0/0")
-@click.option('-m', '--message', required=True, help="String message to sign")
+@cli.command(help="Sign Cardano message.")
+@click.option(
+    "-n", "--address", required=True, help="BIP-32 path to key, e.g. m/44'/1815'/0'/0/0"
+)
+@click.option("-m", "--message", required=True, help="String message to sign")
 @click.pass_obj
 def cardano_sign_message(connect, address, message):
     client = connect()
@@ -1135,15 +1148,16 @@ def cardano_sign_message(connect, address, message):
     return cardano.sign_message(client, address_n, message)
 
 
-@cli.command(help='Verify Cardano message.')
-@click.option('-p', '--public_key', required=True, help="Public key as hex string")
-@click.option('-s', '--signature', required=True, help="Signature as hex string")
-@click.option('-m', '--message', required=True, help="String message which was signed")
+@cli.command(help="Verify Cardano message.")
+@click.option("-p", "--public_key", required=True, help="Public key as hex string")
+@click.option("-s", "--signature", required=True, help="Signature as hex string")
+@click.option("-m", "--message", required=True, help="String message which was signed")
 @click.pass_obj
 def cardano_verify_message(connect, public_key, signature, message):
     client = connect()
 
     return cardano.verify_message(client, public_key, signature, message)
+
 
 #
 # NEM functions
